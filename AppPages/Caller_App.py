@@ -1,5 +1,5 @@
 from appium import webdriver as mobile
-from Tests.globals import capabilities_Pixel7, APP_Caller,appium_server_url_local
+from Tests.globals import CAPABILITIES_PIXEL7, APP_CALLER,APPIUM_SERVER_URL_LOCAL
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,11 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class CallerAppPage:
+    """
+    Class for Dialer App ,finding and clicking elements inside the app.
+    """
     def __init__(self,driver):
         """Initialize the CallerApp on Pixel7 with a WebDriver instance."""
         # Merge APP_Caller into capabilities_Pixel7 if APP_Caller contains additional capabilities
-        capabilities = {**capabilities_Pixel7, **APP_Caller}
-        self.driver = mobile.Remote(appium_server_url_local, capabilities)
+        capabilities = {**CAPABILITIES_PIXEL7, **APP_CALLER}
+        self.driver = mobile.Remote(APPIUM_SERVER_URL_LOCAL, capabilities)
 
 
     def click_pad(self):

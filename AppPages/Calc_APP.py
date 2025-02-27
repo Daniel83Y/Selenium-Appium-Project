@@ -1,21 +1,24 @@
 from appium import webdriver as mobile
-from Tests.globals import capabilities_Pixel7, APP_CALCULATOR,appium_server_url_local
+from Tests.globals import CAPABILITIES_PIXEL7, APP_CALCULATOR,APPIUM_SERVER_URL_LOCAL
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
 class CalcAppPage:
+    """
+    Class for Calculator App ,finding and clicking elements inside the app.
+    """
     def __init__(self, driver):
         """Initialize the CalcAppPage on Pixel7 with a WebDriver instance."""
         # Merge APP_CALCULATOR into capabilities_Pixel7 if APP_CALCULATOR contains additional capabilities
-        capabilities = {**capabilities_Pixel7, **APP_CALCULATOR}
-        self.driver = mobile.Remote(appium_server_url_local, capabilities)
+        capabilities = {**CAPABILITIES_PIXEL7, **APP_CALCULATOR}
+        self.driver = mobile.Remote(APPIUM_SERVER_URL_LOCAL, capabilities)
 
-    def input_price(self):
-        input_p = WebDriverWait(self.driver, 10).until(
+    def input_field(self):
+        input_f = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.ID, 'com.google.android.calculator:id/formula')))
-        return input_p
+        return input_f
 
     def input_digit(self, digit):
         if digit == '.':
@@ -27,13 +30,11 @@ class CalcAppPage:
         digit_element.click()
 
 
-    def input_price_sendkeys2(self, number):
+    def input_field_sendkeys(self, number):
         for digit in str(number):
             self.input_digit(digit)
 
-    def input_price_sendkeys(self, number):
-        input_p = self.input_price()  # Call the function to get the WebElement
-        input_p.send_kweys(str(number))
+
 
     def click_operator_plus(self):
         plus = WebDriverWait(self.driver, 10).until(

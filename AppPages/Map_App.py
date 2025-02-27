@@ -1,7 +1,7 @@
 from appium import webdriver as mobile
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver import Keys
-from Tests.globals import capabilities_Pixel7, APP_GOOGLE_Maps,appium_server_url_local
+from Tests.globals import CAPABILITIES_PIXEL7, APP_GOOGLE_MAPS,APPIUM_SERVER_URL_LOCAL
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,11 +9,14 @@ from appium.webdriver.common.touch_action import TouchAction
 
 
 class MapAppPage:
+    """
+        Class for GoogleMaps App ,finding and clicking elements inside the app.
+        """
     def __init__(self,driver):
         """Initialize the MapAppPage on Pixel7 with a WebDriver instance."""
         # Merge APP_Caller into capabilities_Pixel7 if APP_Caller contains additional capabilities
-        capabilities = {**capabilities_Pixel7, **APP_GOOGLE_Maps}
-        self.driver = mobile.Remote(appium_server_url_local, capabilities)
+        capabilities = {**CAPABILITIES_PIXEL7, **APP_GOOGLE_MAPS}
+        self.driver = mobile.Remote(APPIUM_SERVER_URL_LOCAL, capabilities)
     def touch_skip_start(self):
         #click the skip button from x and y
         x=850

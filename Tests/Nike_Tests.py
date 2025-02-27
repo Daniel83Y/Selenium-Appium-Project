@@ -3,16 +3,15 @@ from selenium.webdriver.edge.service import Service
 from appium import webdriver as mobile
 from selenium import webdriver as web
 from WebPages.Wise_Page import WiseExchangeRate
-from WebPages.Nike_Category_Page import NikeCategoryPage
-from globals import capabilities_Pixel7,NIKE_URL,appium_server_url_local
+from WebPages.Nike_CategoryPage import NikeCategoryPage
+from globals import CAPABILITIES_PIXEL7,NIKE_URL,APPIUM_SERVER_URL_LOCAL
 from WebPages.Nike_HomePage import NikeHomePage
-from WebPages.Nike_Retail import NikeRetailPage
-from WebPages.Nike_Store_Page import  NikeStorePage
-from WebPages.Nike_Product_Page import NikeProductPage
+from WebPages.Nike_RetailPage import NikeRetailPage
+from WebPages.Nike_StorePage import  NikeStorePage
+from WebPages.Nike_ProductPage import NikeProductPage
 from AppPages.Caller_App import CallerAppPage
 from AppPages.Map_App import MapAppPage
 from AppPages.Calc_APP import CalcAppPage
-from time import sleep
 import logging
 
 # Configure logging
@@ -21,16 +20,12 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(message)s")
 class NikeTests(TestCase):
     def setUp(self):
         """Set up the test environment."""
-        # Initialize the Edge browser
         service = Service(executable_path='path/to/edgedriver')
         self.driver = web.Edge(service=service)
         self.driver.get(NIKE_URL)
-        # Maximize the browser window for better visibility
         self.driver.maximize_window()
-        # Set implicit wait for elements to load
         self.driver.implicitly_wait(10)
-        # Initialize Appium driver
-        self.driver_mobile = mobile.Remote(appium_server_url_local, capabilities_Pixel7)
+        self.driver_mobile = mobile.Remote(APPIUM_SERVER_URL_LOCAL, CAPABILITIES_PIXEL7)
         # Initialize page objects for various site components
         self.home_page = NikeHomePage(self.driver)
         self.category = NikeCategoryPage(self.driver)
@@ -40,11 +35,8 @@ class NikeTests(TestCase):
         self.wise_page = WiseExchangeRate(self.driver)
 
     def tearDown(self):
-        """Clean up after the test."""
-        # Wait for 2 seconds to observe results (if needed)
-        sleep(2)
-        # Close the browser to free up resources
         self.driver.quit()
+        self.driver_mobile.quit()
 
     def test_call_store(self):
         """ Test: Go to Nike website,
@@ -90,7 +82,7 @@ class NikeTests(TestCase):
         checked_location_text = self.map_app.checked_location()
         checked_location_parts = checked_location_text.split('\n')
         extracted_checked_location_text = checked_location_parts[1] if len(checked_location_parts) > 1 else ""
-        self.assertEqual(extracted_address, checked_location_text)
+        self.assertEqual(extracted_checked_location_text, checked_location_text)
 
     def test_sms_store(self):
         """ Test: Go to Nike website,
@@ -205,13 +197,13 @@ class NikeTests(TestCase):
         logging.info(f"Second Product: {second_product_name}, Price: {second_product_price}")
 
         # Open Calc App and enter the first item price
-        self.calc_app.input_price_sendkeys2(first_product_price)
+        self.calc_app.input_field_sendkeys(first_product_price)
 
         # Click the plus operator
         self.calc_app.click_operator_plus()
 
         # Enter the second item price
-        self.calc_app.input_price_sendkeys2(second_product_price)
+        self.calc_app.input_field_sendkeys(second_product_price)
 
         # Click the equals operator
         self.calc_app.click_operator_equal()
@@ -229,13 +221,12 @@ class NikeTests(TestCase):
         self.store_location.first_store_click()
         self.store_location.first_store_click()
         store_status = self.store_page.store_status()
+        phone_number = self.store_page.store_phone_number()
         if store_status == "Open":
-            phone_number = self.store_page.store_phone_number()
             logging.info(f"The store is open. Phone number: {phone_number}")
-        elif store_status == "Closed":
-            logging.info("The store is closed.")
         else:
-            logging.info("Store status not found.")
+            logging.info("The store is closed.")
+
         return phone_number
 
     def choose_store_address_func(self):
@@ -244,16 +235,13 @@ class NikeTests(TestCase):
         self.store_location.first_store_click()
 
         store_status = self.store_page.store_status()
-
+        phone_number = self.store_page.store_phone_number()
+        address = self.store_page.store_address()
         if store_status == "Open":
-            phone_number = self.store_page.store_phone_number()
             logging.info(f"The store is open. Phone number: {phone_number}")
 
             # Retrieve the address
-            address = self.store_page.store_address()
             logging.info(f"The store address is: {address}")
-        elif store_status == "Closed":
+        else :
             logging.info("The store is closed.")
-        else:
-            logging.info("Store status not found.")
         return address
